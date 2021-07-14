@@ -9,5 +9,7 @@ Attempt to create some game
 3. ...
 
 ### Day 1
-Added initial project
-Described basic idea
+___
+- Added initial project
+- Described basic idea
+- Added home page

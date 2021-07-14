@@ -1,16 +1,11 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"net/http"
-	"os"
-)
+import "log"
 
 func main() {
-	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello"))
-	})); err != nil {
-		log.Fatal(err)
+	a := app{}
+
+	if err := a.Start(); err != nil {
+		log.Fatal(err.Error())
 	}
 }
