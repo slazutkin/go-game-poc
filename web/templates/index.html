@@ -32,6 +32,10 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
   <script type="text/javascript">
+    const state = {
+      id: ''
+    }
+
     window.onload = function () {
       var conn;
 
@@ -39,21 +43,37 @@
         if (!conn) {
           return
         }
-        conn.send("EVENT_CLICK");
+        conn.send(JSON.stringify({ clientId: state.id, type: 'EVENT_CLICK' }));
       };
 
       if (window["WebSocket"]) {
         conn = new WebSocket("ws://" + document.location.host + "/ws");
         conn.onclose = function (evt) {
-          log('Connection closed');
+          console.log('Connection closed');
         };
         conn.onmessage = function (evt) {
-          console.log(evt.data)
+          try {
+            const msg = JSON.parse(evt.data)
+            processMessage(msg)
+          } catch (e) {
+            console.log(`Invalid message: ${evt.data}`)
+          }
         };
       } else {
-        log('Websockets are not supported')
+        console.log('Websockets are not supported')
       }
     };
+
+    const processMessage = (msg) => {
+      switch (msg.type) {
+        case 'MSG_CONNECTED':
+          state.id = msg.data.id
+          console.log(`Connected: id = ${state.id}`)
+          break
+        default:
+          console.warn(`Unknown message type: ${msg.type}`)
+      }
+    }
   </script>
 </body>
 

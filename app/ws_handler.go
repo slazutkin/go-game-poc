@@ -5,6 +5,8 @@ import (
 	"go-game-poc/pkg/ws"
 	"log"
 	"net/http"
+
+	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 func (a *App) HandleWS(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +16,13 @@ func (a *App) HandleWS(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%+v\n", err)
 	}
 
+	id, err := gonanoid.New()
+	if err != nil {
+		return
+	}
+
 	client := &ws.Client{
+		ID:   id,
 		Conn: conn,
 		Pool: a.pool,
 	}

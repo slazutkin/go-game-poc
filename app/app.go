@@ -26,7 +26,8 @@ func (a *App) Start() error {
 	}
 
 	a.tmpl = t
-	a.pool = ws.NewPool()
+
+	a.pool = ws.NewPool(NewHandler())
 	go a.pool.Start()
 
 	r := mux.NewRouter()

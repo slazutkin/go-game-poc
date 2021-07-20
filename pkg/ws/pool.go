@@ -1,22 +1,24 @@
 package ws
 
 import (
-	"log"
+	"go-game-poc/pkg/event"
 )
 
 type Pool struct {
 	Register   chan *Client
 	Unregister chan *Client
 	Clients    map[*Client]bool
-	Broadcast  chan Message
+	Incoming   chan InboundMessage
+	Handler    event.Handler
 }
 
-func NewPool() *Pool {
+func NewPool(handler event.Handler) *Pool {
 	return &Pool{
 		Register:   make(chan *Client),
 		Unregister: make(chan *Client),
 		Clients:    make(map[*Client]bool),
-		Broadcast:  make(chan Message),
+		Incoming:   make(chan InboundMessage),
+		Handler:    handler,
 	}
 }
 
@@ -25,25 +27,21 @@ func (pool *Pool) Start() {
 		select {
 		case client := <-pool.Register:
 			pool.Clients[client] = true
-			log.Println("Size of Connection Pool: ", len(pool.Clients))
-			for client := range pool.Clients {
-				log.Println(client)
-				client.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined..."})
-			}
+			evt := &event.Event{Type: event.EventConnected, ClientID: client.ID}
+			pool.Handler.HandleEvent(evt)
+			client.Conn.WriteJSON(&OutboundMessage{Type: MessageConnected, Data: ClientData{ID: client.ID}})
 		case client := <-pool.Unregister:
 			delete(pool.Clients, client)
-			log.Println("Size of Connection Pool: ", len(pool.Clients))
-			for client := range pool.Clients {
-				client.Conn.WriteJSON(Message{Type: 1, Body: "User Disconnected..."})
-			}
-		case message := <-pool.Broadcast:
-			log.Println("Sending message to all clients in Pool")
-			for client := range pool.Clients {
-				if err := client.Conn.WriteJSON(message); err != nil {
-					log.Println(err)
-					return
-				}
-			}
+			evt := &event.Event{Type: event.EventConnected, ClientID: client.ID}
+			pool.Handler.HandleEvent(evt)
+			client.Conn.WriteJSON(&OutboundMessage{Type: MessageDisconnected, Data: ClientData{ID: client.ID}})
+		case message := <-pool.Incoming:
+			evt := &event.Event{Type: event.EventData, ClientID: message.ClientID, Data: message.Data}
+			pool.Handler.HandleEvent(evt)
 		}
 	}
+}
+
+func (pool *Pool) Size() int {
+	return len(pool.Clients)
 }
