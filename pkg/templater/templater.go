@@ -1,4 +1,4 @@
-package main
+package templater
 
 import (
 	"os"
@@ -7,7 +7,7 @@ import (
 	"text/template"
 )
 
-func parseTemplates(p string) (*template.Template, error) {
+func ParseTemplates(p string) (*template.Template, error) {
 	files := []string{}
 
 	templ := template.New("")

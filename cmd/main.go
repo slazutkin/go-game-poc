@@ -1,9 +1,12 @@
 package main
 
-import "log"
+import (
+	"go-game-poc/app"
+	"log"
+)
 
 func main() {
-	a := app{}
+	a := app.App{}
 
 	if err := a.Start(); err != nil {
 		log.Fatal(err.Error())
