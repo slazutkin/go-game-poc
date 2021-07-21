@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"go-game-poc/pkg/event"
 	"go-game-poc/pkg/templater"
 	"go-game-poc/pkg/ws"
 	"log"
@@ -13,8 +14,9 @@ import (
 )
 
 type App struct {
-	tmpl *template.Template
-	pool *ws.Pool
+	tmpl         *template.Template
+	pool         *ws.Pool
+	stateManager *StateManager
 }
 
 func (a *App) Start() error {
@@ -27,8 +29,14 @@ func (a *App) Start() error {
 
 	a.tmpl = t
 
-	a.pool = ws.NewPool(NewHandler())
+	inbound := make(chan *event.Event)
+	outbound := make(chan *event.Event)
+
+	a.pool = ws.NewPool(inbound, outbound)
 	go a.pool.Start()
+
+	a.stateManager = NewStateManager(inbound, outbound)
+	go a.stateManager.Start()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", a.HandleIndex).Methods(http.MethodGet)

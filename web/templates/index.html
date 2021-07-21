@@ -24,6 +24,12 @@
     </div>
     <div class="row mt-3">
       <div class="col">
+        <h1>Current score</h1>
+        <h2 id="score">0</h2>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col">
         <button id="mainButton" type="button" class="btn btn-primary">Click me</button>
       </div>
     </div>
@@ -38,6 +44,7 @@
 
     window.onload = function () {
       var conn;
+      const score = document.getElementById('score');
 
       document.getElementById("mainButton").onclick = function () {
         if (!conn) {
@@ -53,10 +60,9 @@
         };
         conn.onmessage = function (evt) {
           try {
-            const msg = JSON.parse(evt.data)
-            processMessage(msg)
+            processEvent(JSON.parse(evt.data))
           } catch (e) {
-            console.log(`Invalid message: ${evt.data}`)
+            console.log(`Invalid event: ${evt.data}`)
           }
         };
       } else {
@@ -64,14 +70,17 @@
       }
     };
 
-    const processMessage = (msg) => {
-      switch (msg.type) {
-        case 'MSG_CONNECTED':
-          state.id = msg.data.id
+    const processEvent = (evt) => {
+      switch (evt.type) {
+        case 'EVT_CONNECTED':
+          state.id = evt.data.id
           console.log(`Connected: id = ${state.id}`)
           break
+        case 'EVT_PLAYER_STATE':
+          score.innerText = evt.data.score.toString()
+          break;
         default:
-          console.warn(`Unknown message type: ${msg.type}`)
+          console.warn(`Unknown message type: ${evt.type}`)
       }
     }
   </script>

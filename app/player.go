@@ -23,3 +23,19 @@ func (p *Player) Score() int {
 func (p *Player) AddScore(score int) {
 	p.score += score
 }
+
+type PlayerState struct {
+	Type string `json:"type"`
+	Data struct {
+		Score int `json:"score"`
+	} `json:"data"`
+}
+
+func NewPlayerState(score int) PlayerState {
+	return PlayerState{
+		Type: "EVT_PLAYER_STATE",
+		Data: struct {
+			Score int `json:"score"`
+		}{Score: score},
+	}
+}

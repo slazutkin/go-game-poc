@@ -17,4 +17,9 @@ ___
 ### Day 2
 ___
 - Added sample communication via web sockets (taken from [tutorial](https://tutorialedge.net/projects/chat-system-in-go-and-react/part-4-handling-multiple-clients/))  
-- changed project structure
+- Changed project structure
+
+### Day 3
+---
+- We can send back events to clients (Yay!)
+- Game state and muliplayer (don't laugh)

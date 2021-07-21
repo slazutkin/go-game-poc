@@ -1,17 +1,13 @@
 package event
 
+const (
+	EventConnected    = "EVT_CONNECTED"
+	EventDisconnected = "EVT_DISCONNECTED"
+	EventData         = "EVT_DATA"
+)
+
 type Event struct {
-	Type     Type
+	Type     string
 	ClientID string
 	Data     interface{}
 }
-
-type Handler interface {
-	HandleEvent(event *Event)
-}
-
-type Type string
-
-const EventConnected = Type("EVENT_CONNECTED")
-const EventDisconnected = Type("EVENT_DISCONNECTED")
-const EventData = Type("EVENT_DATA")
