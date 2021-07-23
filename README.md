@@ -23,3 +23,9 @@ ___
 ---
 - We can send back events to clients (Yay!)
 - Game state and muliplayer (don't laugh)
+
+### Day 4
+---
+- We have an enemy with health bar!
+- We can kill it and advance to the next level
+- TBD: upgades

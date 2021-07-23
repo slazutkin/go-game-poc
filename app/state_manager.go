@@ -26,10 +26,7 @@ func (eh *StateManager) Start() {
 func (eh *StateManager) HandleEvent(evt *event.Event) {
 	switch evt.Type {
 	case event.EventConnected:
-		p, err := NewPlayer(evt.ClientID)
-		if err != nil {
-			return
-		}
+		p := NewPlayer(evt.ClientID)
 		eh.players[evt.ClientID] = p
 		eh.outevt <- p.PlayerStateEvent()
 	case event.EventDisconnected:
@@ -37,6 +34,7 @@ func (eh *StateManager) HandleEvent(evt *event.Event) {
 	case event.EventData:
 		p := eh.players[evt.ClientID]
 		p.AddCredits()
+		p.DamageEnemy()
 		eh.outevt <- p.PlayerStateEvent()
 	}
 }
