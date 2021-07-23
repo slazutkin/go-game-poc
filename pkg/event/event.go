@@ -7,7 +7,7 @@ const (
 )
 
 type Event struct {
-	Type     string
 	ClientID string
-	Data     interface{}
+	Type     string      `json:"type"`
+	Data     interface{} `json:"data"`
 }

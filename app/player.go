@@ -1,41 +1,35 @@
 package app
 
+import "go-game-poc/pkg/event"
+
 type Player struct {
-	id    string
-	score int
+	id      string
+	credits int
+	damage  int
 }
 
 func NewPlayer(id string) (*Player, error) {
 	return &Player{
-		id:    id,
-		score: 0,
+		id:      id,
+		credits: 0,
+		damage:  1,
 	}, nil
 }
 
-func (p *Player) ID() string {
-	return p.id
+func (p *Player) AddCredits() {
+	p.credits += p.damage
 }
 
-func (p *Player) Score() int {
-	return p.score
-}
-
-func (p *Player) AddScore(score int) {
-	p.score += score
-}
-
-type PlayerState struct {
-	Type string `json:"type"`
-	Data struct {
-		Score int `json:"score"`
-	} `json:"data"`
-}
-
-func NewPlayerState(score int) PlayerState {
-	return PlayerState{
-		Type: "EVT_PLAYER_STATE",
+func (p *Player) PlayerStateEvent() *event.Event {
+	return &event.Event{
+		Type:     "EVT_PLAYER_STATE",
+		ClientID: p.id,
 		Data: struct {
-			Score int `json:"score"`
-		}{Score: score},
+			Credits int `json:"credits"`
+			Damage  int `json:"damage"`
+		}{
+
+			Credits: p.credits,
+			Damage:  p.damage},
 	}
 }

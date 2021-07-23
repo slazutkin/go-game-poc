@@ -40,7 +40,7 @@ func (pool *Pool) Start() {
 			if !ok {
 				return
 			}
-			client.Conn.WriteJSON(evt.Data)
+			client.Conn.WriteJSON(evt)
 		}
 	}
 }

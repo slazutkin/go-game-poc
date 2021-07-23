@@ -31,15 +31,12 @@ func (eh *StateManager) HandleEvent(evt *event.Event) {
 			return
 		}
 		eh.players[evt.ClientID] = p
+		eh.outevt <- p.PlayerStateEvent()
 	case event.EventDisconnected:
 		delete(eh.players, evt.ClientID)
 	case event.EventData:
 		p := eh.players[evt.ClientID]
-		p.AddScore(1)
-		eh.outevt <- &event.Event{
-			Type:     "EVENT_STATE",
-			ClientID: p.ID(),
-			Data:     NewPlayerState(p.Score()),
-		}
+		p.AddCredits()
+		eh.outevt <- p.PlayerStateEvent()
 	}
 }
