@@ -1,1 +1,1 @@
-web: bin/game
+web: go-game-poc
