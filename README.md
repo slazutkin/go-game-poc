@@ -29,3 +29,7 @@ ___
 - We have an enemy with health bar!
 - We can kill it and advance to the next level
 - TBD: upgades
+
+### Day 5
+---
+- deployed app to [Heroku](http://go-game-poc.herokuapp.com/)
