@@ -70,7 +70,8 @@
       };
 
       if (window["WebSocket"]) {
-        conn = new WebSocket("ws://" + document.location.host + "/ws");
+        const protocol = document.location.protocol === 'https:' ? 'wss:' : 'ws:'
+        conn = new WebSocket(`${protocol}//${document.location.host}/ws`);
         conn.onclose = function (evt) {
           console.log('Connection closed');
         };
