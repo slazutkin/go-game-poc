@@ -1,1 +1,1 @@
-web: game
+web: bin/game
