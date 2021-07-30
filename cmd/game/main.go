@@ -9,6 +9,6 @@ func main() {
 	a := app.App{}
 
 	if err := a.Start(); err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("Can't start application: %s", err.Error())
 	}
 }
